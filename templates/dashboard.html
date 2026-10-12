@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | ExpenseFlow</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+
+        <nav class="navbar">
+            <a href="/dashboard" class="brand">
+                Expense<span>Flow.</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/add-expense">Add Expense</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </nav>
+
+        <main>
+            <div class="page-heading">
+                <div>
+                    <h1>Your Dashboard</h1>
+                    <p>Welcome back, {{ name }}. Here's your expense overview.</p>
+                </div>
+
+                <a href="/add-expense" class="button">+ Add Expense</a>
+            </div>
+
+            <div class="stats-grid">
+                <div class="card">
+                    <span class="stat-label">Total Expenses</span>
+                    <span class="stat-value">{{ expenses|length }}</span>
+                    <p>Transactions recorded</p>
+                </div>
+
+                <div class="card">
+                    <span class="stat-label">Total Spent</span>
+                    <span class="stat-value">₹{{ "%.2f"|format(expenses|sum(attribute=1)) }}</span>
+                    <p>Across all transactions</p>
+                </div>
+
+                <div class="card">
+                    <span class="stat-label">Account</span>
+                    <span class="stat-value" style="font-size: 20px;">Active</span>
+                    <p>{{ email }}</p>
+                </div>
+            </div>
+
+            <section class="card">
+                <div class="page-heading">
+                    <div>
+                        <h2>Recent Transactions</h2>
+                        <p>Keep track of where your money goes.</p>
+                    </div>
+                </div>
+
+                {% if expenses %}
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for expense in expenses %}
+                            <tr>
+                                <td><strong>{{ expense[0] }}</strong></td>
+                                <td>{{ expense[2] }}</td>
+                                <td>{{ expense[3] }}</td>
+                                <td><strong>₹{{ "%.2f"|format(expense[1]) }}</strong></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <h3>No expenses yet</h3>
+                    <p>Your transactions will appear here once you add your first expense.</p>
+                    <a href="/add-expense" class="button">Add your first expense</a>
+                </div>
+                {% endif %}
+            </section>
+
+            <p style="text-align: center; margin-top: 28px; font-size: 13px;">
+                Logged in as {{ email }} · ExpenseFlow
+            </p>
+        </main>
+
+    </div>
+
+</body>
+</html>
